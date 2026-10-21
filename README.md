@@ -3,18 +3,25 @@
 Aplicación desarrollada con React, TypeScript, Vite y PNPM para administrar tareas.
 
 ## Alcance actual
-La aplicación permite visualizar una colección local de tareas mediante componentes React.
-Actualmente incluye:
-- Modelo de tarea con TypeScript.
-- Cinco tareas locales.
-- Renderizado mediante map.
-- Uso de claves estables.
-- Estados pendiente y completada.
-- Resumen calculado.
-- Mensaje para una colección vacía.
-- Componente independiente para insignias de estado (Desafío individual).
+La aplicación administra una colección local de tareas mediante estado de React (`useState`).
+Actualmente permite:
+- Registrar tareas mediante un formulario controlado.
+- Consultar la colección en tiempo real.
+- Completar y reabrir tareas.
+- Editar títulos de tareas con opción de cancelar.
+- Eliminar tareas con confirmación.
+- Calcular el resumen automáticamente después de cada operación.
+- Mostrar un estado vacío cuando no hay registros.
+- Componente independiente para insignias de estado.
 - Diseño adaptable.
-Los formularios, eventos y operaciones CRUD se implementarán en actividades posteriores.
+
+Los cambios permanecen en memoria y se reinician al recargar la página.
+
+## Operaciones CRUD
+- **Create**: registro mediante el formulario (operador *spread*).
+- **Read**: renderizado dinámico de la colección (*map*).
+- **Update**: cambio de estado y edición de títulos (*map* y *spread*).
+- **Delete**: eliminación confirmada (*filter*).
 
 ## Tecnologías
 - React
@@ -25,21 +32,5 @@ Los formularios, eventos y operaciones CRUD se implementarán en actividades pos
 - Git y GitHub
 
 ## Instalación
+```bash
 pnpm install
-
-## Ejecución
-pnpm dev
-
-## Validación
-pnpm lint
-pnpm build
-
-## Estructura principal
-- components: componentes visuales.
-- data: colección local de tareas.
-- models: tipos e interfaces.
-- styles: estilos globales.
-- docs: preguntas y documentación.
-
-## Modelo Task
-Cada tarea contiene id, title, status, createdAt y updatedAt.
