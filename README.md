@@ -1,27 +1,15 @@
-# Administrador de tareas - Frontend
+# Administrador de tareas Frontend
 
 Aplicación desarrollada con React, TypeScript, Vite y PNPM para administrar tareas.
 
-## Alcance actual
-La aplicación administra una colección local de tareas mediante estado de React (`useState`).
-Actualmente permite:
-- Registrar tareas mediante un formulario controlado.
-- Consultar la colección en tiempo real.
-- Completar y reabrir tareas.
-- Editar títulos de tareas con opción de cancelar.
-- Eliminar tareas con confirmación.
-- Calcular el resumen automáticamente después de cada operación.
-- Mostrar un estado vacío cuando no hay registros.
-- Componente independiente para insignias de estado.
-- Diseño adaptable.
-
-Los cambios permanecen en memoria y se reinician al recargar la página.
-
-## Operaciones CRUD
-- **Create**: registro mediante el formulario (operador *spread*).
-- **Read**: renderizado dinámico de la colección (*map*).
-- **Update**: cambio de estado y edición de títulos (*map* y *spread*).
-- **Delete**: eliminación confirmada (*filter*).
+## Funciones actuales
+- Operaciones CRUD de tareas (Create, Read, Update, Delete).
+- Validación centralizada de títulos al registrar y editar.
+- Búsqueda de tareas por título en tiempo real y normalizada.
+- Filtro de visualización por estado (Todas, Pendientes, Completadas).
+- Ordenamiento de resultados por actualización reciente, creación reciente y título (A-Z).
+- Persistencia de datos entre sesiones mediante `localStorage` con validación defensiva.
+- Interfaz adaptable y accesible con atributos ARIA.
 
 ## Tecnologías
 - React
@@ -31,6 +19,7 @@ Los cambios permanecen en memoria y se reinician al recargar la página.
 - CSS
 - Git y GitHub
 
-## Instalación
+## Ejecución
 ```bash
 pnpm install
+pnpm dev
