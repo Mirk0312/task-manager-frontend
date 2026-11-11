@@ -1,14 +1,12 @@
-import type { Task } from '../models/task.interface';
-import { TaskItem } from './TaskItem';
-
+import type { Task } from "../models/task.interface";
+import { TaskItem } from "./TaskItem";
 interface TaskListProps {
   tasks: Task[];
   emptyMessage: string;
   onToggleStatus: (id: string) => void;
   onEditTask: (id: string, title: string) => void;
-  onDeleteTask: (id: string) => void;
+  onDeleteTask: (id: string) => boolean;
 }
-
 export function TaskList({
   tasks,
   emptyMessage,
@@ -16,28 +14,15 @@ export function TaskList({
   onEditTask,
   onDeleteTask,
 }: TaskListProps) {
-  const resultLabel =
-    tasks.length === 1
-      ? '1 tarea'
-      : `${tasks.length} tareas`;
-
+  const resultLabel = tasks.length === 1 ? "1 tarea" : `${tasks.length} tareas`;
   return (
-    <section
-      className="panel"
-      aria-labelledby="task-list-title"
-    >
+    <section className="panel" aria-labelledby="task-list-title">
       <div className="section-heading">
         <div>
-          <p className="section-heading_eyebrow">
-            Actividades
-          </p>
-          <h2 id="task-list-title">
-            Tareas registradas
-          </h2>
+          <p className="section-heading__eyebrow">Actividades</p>
+          <h2 id="task-list-title">Tareas registradas</h2>
         </div>
-        <span className="result-count">
-          {resultLabel}
-        </span>
+        <span className="result-count">{resultLabel}</span>
       </div>
       {tasks.length === 0 ? (
         <div className="empty-state" role="status">
