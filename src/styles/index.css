@@ -1,5 +1,5 @@
 /* ==========================================
-   Parte 1 de 4: Base y reset
+   1. Base, Variables y Reset Global
    ========================================== */
 :root {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -9,8 +9,10 @@
   text-rendering: optimizeLegibility;
 }
 
-* { 
-  box-sizing: border-box; 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
@@ -21,11 +23,21 @@ body {
   background: #f3f5f9;
 }
 
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+/* ==========================================
+   2. Elementos de Formulario y Controles
+   ========================================== */
 button,
 input,
-select { 
-  font: inherit; 
-  border-radius: 0.55rem; 
+select {
+  font: inherit;
+  border-radius: 0.55rem;
 }
 
 button {
@@ -33,6 +45,7 @@ button {
   padding: 0.7rem 1rem;
   color: #fff;
   background: #1d4ed8;
+  cursor: pointer;
 }
 
 button:disabled {
@@ -52,19 +65,17 @@ select {
 input:focus-visible,
 select:focus-visible,
 button:focus-visible {
-  outline: 3px solid #93c5fd;
-  outline-offset: 2px;
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
 }
 
-h1,
-h2,
-h3,
-p { 
-  margin-top: 0; 
+input[aria-invalid='true'] {
+  border-color: #9b1c1c;
+  outline-color: #9b1c1c;
 }
 
 /* ==========================================
-   Parte 2 de 4: Estructura principal
+   3. Estructura Principal y Layouts
    ========================================== */
 .app-shell {
   display: flex;
@@ -85,6 +96,66 @@ p {
   margin-inline: auto;
 }
 
+.app-main {
+  display: grid;
+  flex: 1;
+  gap: 1.25rem;
+  padding-block: 1.5rem 3rem;
+}
+
+.page-stack {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.panel,
+.summary-card {
+  border: 1px solid #d7dce5;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
+}
+
+.panel {
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+}
+
+/* Navegación Superior */
+.app-navigation {
+  border-bottom: 1px solid #d1d5db;
+  background: #ffffff;
+}
+
+.app-navigation__list {
+  display: flex;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.app-navigation__link {
+  display: inline-flex;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.5rem;
+  color: #334155;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-navigation__link:hover {
+  background: #e2e8f0;
+}
+
+.app-navigation__link--active {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+/* ==========================================
+   4. Componentes de Cabeceras y Textos
+   ========================================== */
 .eyebrow,
 .section-heading_eyebrow {
   margin-bottom: 0.4rem;
@@ -94,8 +165,12 @@ p {
   text-transform: uppercase;
 }
 
-.eyebrow { 
-  color: #bfdbfe; 
+.eyebrow {
+  color: #bfdbfe;
+}
+
+.section-heading_eyebrow {
+  color: #1d4ed8;
 }
 
 .app-header h1 {
@@ -112,28 +187,6 @@ p {
   line-height: 1.6;
 }
 
-.app-main {
-  display: grid;
-  flex: 1;
-  gap: 1.25rem;
-  padding-block: 1.5rem 3rem;
-}
-
-.panel,
-.summary-card {
-  border: 1px solid #d7dce5;
-  background: #fff;
-  box-shadow: 0 8px 24px rgb(15 23 42 / 5%);
-}
-
-.panel {
-  border-radius: 0.85rem;
-  padding: 1.25rem;
-}
-
-/* ==========================================
-   Parte 3 de 4: Formularios, filtros y resumen
-   ========================================== */
 .section-heading {
   display: flex;
   align-items: start;
@@ -142,29 +195,20 @@ p {
   margin-bottom: 1rem;
 }
 
-.section-heading_eyebrow { 
-  color: #1d4ed8; 
-}
-
 .section-heading h2 {
   margin-bottom: 0;
   font-size: 1.35rem;
 }
 
-.task-form {
-  display: grid;
-  gap: 0.6rem;
+.page-introduction {
+  padding: 0.25rem 0;
 }
 
-.task-form label,
-.field label { 
-  font-weight: 700; 
-}
-
-.task-form_row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.75rem;
+.page-introduction h2,
+.welcome-panel h2,
+.task-detail h2,
+.not-found h2 {
+  margin-top: 0;
 }
 
 .helper-text {
@@ -173,10 +217,65 @@ p {
   font-size: 0.9rem;
 }
 
+.field-error {
+  margin: 0;
+  color: #9b1c1c;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================
+   5. Formularios, Filtros y Resúmenes
+   ========================================== */
+.task-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.task-form label,
+.field label {
+  font-weight: 700;
+}
+
+/* Sincronizado con task-form__row del componente */
+.task-form__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.task-form__row button {
+  padding: 0.75rem 1.25rem;
+  white-space: nowrap;
+}
+
 .filters-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(170px, 1fr));
   gap: 1rem;
+  align-items: end;
+}
+
+.filter-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.filter-field span {
+  font-weight: 700;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+}
+
+.filter-results {
+  min-height: 1.4rem;
+  margin: 1rem 0 0;
+  color: #4b5563;
 }
 
 .field {
@@ -208,6 +307,13 @@ p {
   font-size: 2rem;
 }
 
+.task-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .result-count {
   border-radius: 999px;
   padding: 0.4rem 0.75rem;
@@ -219,7 +325,7 @@ p {
 }
 
 /* ==========================================
-   Parte 4 de 4: Tarjetas de tarea y diseño adaptable
+   6. Tarjetas de Tarea (Task Items) y Edición
    ========================================== */
 .task-list {
   display: grid;
@@ -259,6 +365,12 @@ p {
   text-decoration: line-through;
 }
 
+.task-item__date {
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
 .status-badge {
   display: inline-block;
   border-radius: 999px;
@@ -289,11 +401,176 @@ p {
   font-size: 0.85rem;
 }
 
+.task-item__edit-form {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.task-item__edit-input {
+  width: 100%;
+}
+
+.task-item__edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ==========================================
+   7. Estados Especiales (Async, Empty, Not Found)
+   ========================================== */
+.request-status,
+.operation-message {
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+}
+
+.request-status--error,
+.operation-message--error {
+  border-color: #b91c1c;
+}
+
+.request-status h3 {
+  margin-top: 0;
+}
+
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  border: 1px dashed #94a3b8;
+  border-radius: 0.75rem;
+  padding: 2rem 1rem;
+  color: #475569;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.empty-state h3,
+.empty-state p {
+  margin-bottom: 0;
+}
+
+.empty-state h3 {
+  color: #334155;
+  font-size: 1.05rem;
+}
+
+[aria-busy='true'] {
+  opacity: 0.7;
+}
+
+/* ==========================================
+   8. Botones, Enlaces y Paginación
+   ========================================== */
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link:hover {
+  background: #1e40af;
+}
+
+.button-link--secondary {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.button-link--secondary:hover {
+  background: #cbd5e1;
+}
+
 .button-danger {
   border-color: #b91c1c;
   background: #b91c1c;
 }
 
+.welcome-panel__actions {
+  display: flex;
+  margin-top: 1.25rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+/* ==========================================
+   9. Detalle de Tarea y Página 404
+   ========================================== */
+.task-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.task-detail__grid div {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+}
+
+.task-detail__grid dt {
+  margin-bottom: 0.4rem;
+  color: #475569;
+  font-weight: 700;
+}
+
+.task-detail__grid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.task-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.not-found {
+  text-align: center;
+}
+
+.not-found .button-link {
+  margin-top: 1rem;
+}
+
+/* ==========================================
+   10. Utilidades y Accesibilidad
+   ========================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================
+   11. Footer
+   ========================================== */
 .app-footer {
   border-top: 1px solid #d7dce5;
   padding: 1.5rem 1rem;
@@ -306,243 +583,67 @@ p {
   text-align: center;
 }
 
-
-.task-item__date {
- margin-bottom: 0;
- color: #64748b;
- font-size: 0.85rem;
-}
-.empty-state {
- display: grid;
- justify-items: center;
- gap: 0.5rem;
- border: 1px dashed #94a3b8;
- border-radius: 0.75rem;
- padding: 2rem 1rem;
- color: #475569;
- background: #f8fafc;
- text-align: center;
-}
-.empty-state h3,
-.empty-state p {
- margin-bottom: 0;
-}
-.empty-state h3 {
- color: #334155;
- font-size: 1.05rem;
-}
-
-.task-item__edit-form {
- display: grid;
- gap: 0.65rem;
- width: 100%;
-}
-.task-item__edit-input {
- width: 100%;
-}
-.task-item__edit-actions {
- display: flex;
- flex-wrap: wrap;
- gap: 0.5rem;
-}
-.sr-only {
- position: absolute;
- width: 1px;
- height: 1px;
- padding: 0;
- margin: -1px;
- overflow: hidden;
- clip: rect(0, 0, 0, 0);
- white-space: nowrap;
- border: 0;
-}
-.field-error {
-  margin: 0;
-  color: #9b1c1c;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-input[aria-invalid='true'] {
-  border-color: #9b1c1c;
-  outline-color: #9b1c1c;
-}
-
-.filters-grid {
-  display: grid;
-  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(170px, 1fr));
-  gap: 1rem;
-  align-items: end;
-}
-
-.filter-field {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.filter-field span {
-  font-weight: 700;
-}
-
-.filter-field input,
-.filter-field select {
-  width: 100%;
-}
-
-.filter-results {
-  min-height: 1.4rem;
-  margin: 1rem 0 0;
-  color: #4b5563;
-}
-.app-navigation {
-border-bottom: 1px solid #d1d5db;
-background: #ffffff;
-}
-.app-navigation__list {
-display: flex;
-width: min(1120px, calc(100% - 2rem));
-margin: 0 auto;
-padding: 0.75rem 0;
-gap: 0.75rem;
-list-style: none;
-}
-.app-navigation__link {
-display: inline-flex;
-padding: 0.65rem 0.9rem;
-border-radius: 0.5rem;
-color: #334155;
-font-weight: 700;
-text-decoration: none;
-}
-.app-navigation__link:hover {
-background: #e2e8f0;
-}
-.app-navigation__link--active {
-background: #1d4ed8;
-color: #ffffff;
-}
-.app-navigation__link:focus-visible,
-.button-link:focus-visible {
-outline: 3px solid #f59e0b;
-outline-offset: 3px;
-}
-.page-stack {
-display: grid;
-gap: 1.25rem;
-}
-
-.page-introduction {
-padding: 0.25rem 0;
-}
-.page-introduction h2,
-.welcome-panel h2,
-.task-detail h2,
-.not-found h2 {
-margin-top: 0;
-}
-.welcome-panel__actions {
-display: flex;
-margin-top: 1.25rem;
-}
-.button-link {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-min-height: 2.75rem;
-padding: 0.7rem 1rem;
-border-radius: 0.5rem;
-background: #1d4ed8;
-color: #ffffff;
-font-weight: 700;
-text-decoration: none;
-}
-.button-link:hover {
-background: #1e40af;
-}
-.button-link--secondary {
-background: #e2e8f0;
-color: #1e293b;
-}
-.button-link--secondary:hover {
-background: #cbd5e1;
-}
-.task-detail__grid {
-display: grid;
-grid-template-columns:
-repeat(2, minmax(0, 1fr));
-gap: 1rem;
-margin: 1.5rem 0;
-}
-.task-detail__grid div {
-padding: 1rem;
-border: 1px solid #d1d5db;
-border-radius: 0.5rem;
-background: #f8fafc;
-}
-.task-detail__grid dt {
-margin-bottom: 0.4rem;
-color: #475569;
-font-weight: 700;
-}
-.task-detail__grid dd {
-margin: 0;
-overflow-wrap: anywhere;
-}
-.task-detail__actions {
-display: flex;
-flex-wrap: wrap;
-gap: 0.75rem;
-}
-.not-found {
-text-align: center;
-}
-.not-found .button-link {
-margin-top: 1rem;
-}
+/* ==========================================
+   12. Media Queries (Diseño Adaptable)
+   ========================================== */
 @media (max-width: 760px) {
   .filters-grid {
     grid-template-columns: 1fr;
   }
+  
   .app-navigation__list {
-flex-direction: column;
-align-items: stretch;
-}
-.app-navigation__link {
-display: flex;
-}
-.task-detail__grid {
-grid-template-columns: 1fr;
-}
-.task-detail__actions {
-flex-direction: column;
-align-items: stretch;
-}
-.task-detail__actions .button-link,
-.task-detail__actions button {
-width: 100%;
-}
-}
-@media (max-width: 720px) {
-  .app-header { 
-    padding-block: 2.25rem; 
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .task-form_row,
+  .app-navigation__link {
+    display: flex;
+  }
+
+  .task-detail__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-detail__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .task-detail__actions .button-link,
+  .task-detail__actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-header {
+    padding-block: 2.25rem;
+  }
+
+  .task-form__row,
   .filters-grid,
   .summary-grid,
-  .task-item { 
-    grid-template-columns: 1fr; 
+  .task-item {
+    grid-template-columns: 1fr;
   }
 
-  .task-form_row button { 
-    width: 100%; 
+  .task-form__row button {
+    width: 100%;
   }
 
-  .task-item_actions { 
-    justify-content: start; 
+  .task-item_actions {
+    justify-content: start;
   }
 
-  .task-item_actions button { 
-    flex: 1 1 8rem; 
+  .task-item_actions button {
+    flex: 1 1 8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .task-summary,
+  .pagination {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
