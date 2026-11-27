@@ -5,10 +5,13 @@ const fetchMock = vi.fn<typeof fetch>();
 
 describe('http.service', () => {
   beforeEach(() => {
+    vi.stubEnv('VITE_API_URL', '');
     vi.stubGlobal('fetch', fetchMock);
+    fetchMock.mockReset();
   });
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     vi.unstubAllGlobals();
   });
 
