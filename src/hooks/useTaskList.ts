@@ -18,15 +18,11 @@ const EMPTY_META: PageMeta = {
   hasNextPage: false,
   hasPreviousPage: false,
 };
-export function useTaskList(query: TaskListQuery) {
+export function useTaskList(query: TaskListQuery, accessToken: string | null) {
   const { page, limit, search, status: statusFilter, sortBy, order } = query;
   const [state, setState] = useState<TaskListState>({
     tasks: [],
-    meta: {
-      ...EMPTY_META,
-      page,
-      limit,
-    },
+    meta: { ...EMPTY_META, page, limit },
     status: "idle",
     errorMessage: "",
   });
@@ -35,13 +31,24 @@ export function useTaskList(query: TaskListQuery) {
     setReloadKey((current) => current + 1);
   }, []);
   useEffect(() => {
+    if (!accessToken) {
+      setState({
+        tasks: [],
+        meta: { ...EMPTY_META, page, limit },
+        status: "idle",
+        errorMessage: "",
+      });
+      return;
+    }
     const controller = new AbortController();
+
     async function load(): Promise<void> {
       setState((current) => ({
         ...current,
-        status: "loading",
-        errorMessage: "",
+        status: 'loading',
+        errorMessage: '',
       }));
+
       try {
         const response = await listTasks(
           {
@@ -52,13 +59,18 @@ export function useTaskList(query: TaskListQuery) {
             sortBy,
             order,
           },
+          accessToken as string, // Solución al error de tipado
           controller.signal,
         );
+
         setState({
           tasks: response.data,
           meta: response.meta,
-          status: response.data.length === 0 ? "empty" : "success",
-          errorMessage: "",
+          status:
+            response.data.length === 0
+              ? 'empty'
+              : 'success',
+          errorMessage: '',
         });
       } catch (error) {
         if (isAbortError(error)) {
@@ -66,23 +78,26 @@ export function useTaskList(query: TaskListQuery) {
         }
         setState({
           tasks: [],
-          meta: {
-            ...EMPTY_META,
-            page,
-            limit,
-          },
-          status: "error",
+          meta: { ...EMPTY_META, page, limit },
+          status: 'error',
           errorMessage: getHttpErrorMessage(error),
         });
       }
     }
+
     void load();
-    return () => {
-      controller.abort();
-    };
-  }, [page, limit, search, statusFilter, sortBy, order, reloadKey]);
-  return {
-    ...state,
-    reload,
-  };
+
+    return () => controller.abort();
+
+  }, [
+    accessToken,
+    page,
+    limit,
+    search,
+    statusFilter,
+    sortBy,
+    order,
+    reloadKey,
+  ]);
+  return { ...state, reload };
 }
