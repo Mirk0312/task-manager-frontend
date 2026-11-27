@@ -10,7 +10,9 @@ import {
 import { deleteTask, getTaskById } from "../services/task.api.service";
 import { formatTaskDate } from "../utils/date";
 import { NotFoundPage } from "./NotFoundPage";
+
 type DetailStatus = "loading" | "success" | "not-found" | "error";
+
 export function TaskDetailPage() {
   const { taskId } = useParams<{
     taskId: string;
@@ -23,6 +25,7 @@ export function TaskDetailPage() {
   const [reloadKey, setReloadKey] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const canDelete = user?.role === "admin";
+
   useEffect(() => {
     if (!taskId) {
       setStatus("not-found");
@@ -43,7 +46,7 @@ export function TaskDetailPage() {
           accessToken as string,
           controller.signal,
         );
-        setTask(response.data);
+        setTask(response);
         setStatus("success");
       } catch (error) {
         if (isAbortError(error)) return;
@@ -58,6 +61,7 @@ export function TaskDetailPage() {
     void loadTask();
     return () => controller.abort();
   }, [taskId, accessToken, reloadKey]);
+
   async function handleDelete(): Promise<void> {
     if (!task || !accessToken || !canDelete) {
       return;
@@ -74,9 +78,11 @@ export function TaskDetailPage() {
       setIsDeleting(false);
     }
   }
+
   if (status === "loading") {
     return <p role="status">Consultando tarea...</p>;
   }
+
   if (status === "not-found") {
     return (
       <NotFoundPage
@@ -85,6 +91,7 @@ export function TaskDetailPage() {
       />
     );
   }
+
   if (status === "error" || !task) {
     return (
       <section className="panel" role="alert">
@@ -99,6 +106,7 @@ export function TaskDetailPage() {
       </section>
     );
   }
+
   return (
     <article className="panel task-detail" aria-labelledby="task-detail-title">
       <p className="section-heading__eyebrow">Detalle protegido</p>
