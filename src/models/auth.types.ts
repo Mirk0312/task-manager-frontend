@@ -1,4 +1,5 @@
-export type UserRole = "user" | "admin";
+// src/models/auth.types.ts
+export type UserRole = 'user' | 'admin';
 
 export interface AuthUser {
   id: string;
@@ -9,4 +10,34 @@ export interface AuthUser {
   updatedAt: string;
 }
 
-export type AuthStatus = "checking" | "authenticated" | "anonymous";
+export interface RegisterCredentials {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  user: AuthUser;
+}
+
+export interface LoginData {
+  user: AuthUser;
+  accessToken: string;
+  tokenType: 'Bearer';
+  expiresIn: string;
+}
+
+export interface MeData {
+  user: AuthUser;
+}
+
+export type AuthStatus =
+  | 'checking'
+  | 'anonymous'
+  | 'authenticated'
+  | 'error';

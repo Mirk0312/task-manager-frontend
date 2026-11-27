@@ -1,45 +1,34 @@
-import { Link } from 'react-router';
-import type { Task } from '../models/task.interface';
-import { TaskSummary } from '../components/TaskSummary';
-
-interface HomePageProps {
-tasks: Task[];
-}
-
-export function HomePage({
-   tasks,
-}: HomePageProps) {
+import { Link } from "react-router";
+import { useAuth } from "../hooks/useAuth";
+export function HomePage() {
+  const { status, user } = useAuth();
+  const isAuthenticated = status === "authenticated" && user;
   return (
-    <div className="page-stack">
-      <section
-          className="panel welcome-panel"
-          aria-labelledby="home-title"
+    <section className="panel welcome-panel" aria-labelledby="home-title">
+      <p className="section-heading__eyebrow">Inicio</p>
+      <h2 id="home-title">Administrador de tareas protegido</h2>
+      <p>
+        La aplicación utiliza la API REST de Express, MongoDB Atlas y
+        autenticación mediante JWT.
+      </p>
+      {isAuthenticated && (
+        <p>
+          Sesión activa para {user.name} con rol <strong>{user.role}</strong>.
+        </p>
+      )}
+      <div className="welcome-panel__actions">
+        <Link
+          className="button-link"
+          to={isAuthenticated ? "/tasks" : "/login"}
         >
-          <p className="section-heading__eyebrow">
-            Inicio
-          </p>
-
-          <h2 id="home-title">
-              Organiza y consulta tus actividades
-          </h2>
-       
-          <p>
-            Registra tareas, actualiza su estado y utiliza
-            las herramientas de consulta para concentrarte
-            en el trabajo importante.
-          </p>
-
-          <div className="welcome-panel__actions">
-            <Link
-               className="button-link"
-                to="/tasks"
-          >
-             Administrar tareas
-         </Link>
-       </div>
+          {isAuthenticated ? "Administrar tareas" : "Iniciar sesión"}
+        </Link>
+        {!isAuthenticated && (
+          <Link className="button-link button-link--secondary" to="/register">
+            Crear cuenta
+          </Link>
+        )}
+      </div>
     </section>
- {/* Muestra estadisticas de las tareas */}
-  <TaskSummary tasks={tasks} />
-   </div>
   );
 }
